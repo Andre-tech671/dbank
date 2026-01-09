@@ -8,10 +8,11 @@ persistent actor Dbank {
     // Print the current value using debug_show
     Debug.print(debug_show(id));
 
-    func topUp() {
+//making the funcion to top up the value and its a public function
+    public func topUp() {
       currentValue += 1;
       Debug.print(debug_show(currentValue));
     };
-    
-    topUp();
+
+    //topUp();
 };
