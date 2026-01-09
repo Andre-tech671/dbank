@@ -7,4 +7,11 @@ persistent actor Dbank {
     let id = 2345678910;
     // Print the current value using debug_show
     Debug.print(debug_show(id));
+
+    func topUp() {
+      currentValue += 1;
+      Debug.print(debug_show(currentValue));
+    };
+    
+    topUp();
 };
