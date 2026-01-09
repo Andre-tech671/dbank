@@ -9,10 +9,25 @@ persistent actor Dbank {
     Debug.print(debug_show(id));
 
 //making the funcion to top up the value and its a public function
-    public func topUp() {
-      currentValue += 1;
+//Allows users to add funds to their account
+    public func topUp(amount : Nat) {
+      currentValue += amount;
       Debug.print(debug_show(currentValue));
     };
 
+//Allows users to wothdraw funds from their account
+    public func withdraw(amount : Nat) {
+      if (amount <= currentValue) {
+        currentValue -= amount;
+        Debug.print(debug_show(currentValue));
+      } else {
+        Debug.print("Insufficient funds");
+      }
+    };
+
+    //decrease the value by which the user wants to withdraw
+    
+
     //topUp();
 };
+  
