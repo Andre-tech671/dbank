@@ -17,7 +17,8 @@ persistent actor Dbank {
 
 //Allows users to wothdraw funds from their account
     public func withdraw(amount : Nat) {
-      if (amount <= currentValue) {
+      let tempValue: Int = currentValue - amount;
+      if (tempValue >= 0) {
         currentValue -= amount;
         Debug.print(debug_show(currentValue));
       } else {
