@@ -26,6 +26,11 @@ persistent actor Dbank {
       }
     };
 
+    public query func checkBalance(): async Nat {
+      return currentValue;
+
+    }
+
     //decrease the value by which the user wants to withdraw
     
 
