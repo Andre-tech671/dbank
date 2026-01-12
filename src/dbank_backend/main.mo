@@ -8,6 +8,8 @@ import Nat "mo:base/Nat";
 persistent actor Dbank {
 
   var currentValue : Float = 300.0;
+  currentValue := 300.0;
+  Debug.print("Initial value: " # debug_show(currentValue));
 
   var startTime = Time.now();
   Debug.print("Start time: " # debug_show(startTime));
