@@ -1,59 +1,159 @@
-# `dbank`
+# DBank - Decentralized Banking on the Internet Computer
 
-Welcome to your new `dbank` project and to the Internet Computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
+A simple decentralized banking application built on the [Internet Computer Protocol (ICP)](https://internetcomputer.org/). DBank allows users to manage their funds with features like deposits, withdrawals, balance checking, and automatic compound interest.
 
-To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
+## 🌟 Features
 
-To learn more before you start working with `dbank`, see the following documentation available online:
+- **Deposit Funds**: Add money to your account using the `topUp` function
+- **Withdraw Funds**: Withdraw money with balance verification to prevent overdrafts
+- **Check Balance**: Query your current account balance at any time
+- **Compound Interest**: Automatically calculates and applies 1% compound interest based on time elapsed
+- **Decentralized**: Runs entirely on the Internet Computer blockchain
+- **Secure**: Integrated with Internet Identity for authentication
 
-- [Quick Start](https://internetcomputer.org/docs/current/developer-docs/setup/deploy-locally)
-- [SDK Developer Tools](https://internetcomputer.org/docs/current/developer-docs/setup/install)
-- [Motoko Programming Language Guide](https://internetcomputer.org/docs/current/motoko/main/motoko)
-- [Motoko Language Quick Reference](https://internetcomputer.org/docs/current/motoko/main/language-manual)
+## 🏗️ Architecture
 
-If you want to start working on your project right away, you might want to try the following commands:
+### Backend (Motoko)
+The backend is written in [Motoko](https://internetcomputer.org/docs/current/motoko/main/motoko), a programming language designed for the Internet Computer. Key components:
 
-```bash
-cd dbank/
-dfx help
-dfx canister --help
+- `currentValue`: Persistent stable variable storing the account balance (initialized at 300)
+- `startTime`: Tracks the last compounding timestamp
+- `topUp(amount)`: Public function to deposit funds
+- `withdraw(amount)`: Public function to withdraw funds (validates sufficient balance)
+- `checkBalance()`: Query function to retrieve current balance
+- `compound()`: Applies 1% interest based on time elapsed since last compounding
+
+### Frontend (React + Vite)
+The frontend is built with modern web technologies:
+
+- **React 18**: UI component library
+- **Vite**: Fast build tool and development server
+- **TypeScript**: Type-safe development
+- **SCSS**: Advanced styling capabilities
+- **Vitest**: Unit testing framework
+
+## 📁 Project Structure
+
+```
+dbank/
+├── dfx.json                    # DFX canister configuration
+├── package.json                # Root workspace configuration
+├── tsconfig.json               # TypeScript configuration
+├── src/
+│   ├── dbank_backend/
+│   │   └── main.mo            # Motoko backend canisters
+│   ├── dbank_frontend/
+│   │   ├── src/
+│   │   │   ├── App.jsx        # Main React application
+│   │   │   ├── main.jsx       # Application entry point
+│   │   │   ├── index.scss     # Global styles
+│   │   │   ├── setupTests.js  # Test setup
+│   │   │   ├── tests/         # Test files
+│   │   │   └── vite-env.d.ts  # Vite type declarations
+│   │   ├── package.json       # Frontend dependencies
+│   │   ├── vite.config.js     # Vite configuration
+│   │   └── public/            # Static assets
+│   └── declarations/          # Generated candid interfaces
 ```
 
-## Running the project locally
+## 🚀 Getting Started
 
-If you want to test your project locally, you can use the following commands:
+### Prerequisites
 
+- Node.js >= 16.0.0
+- npm >= 7.0.0
+- [DFX SDK](https://internetcomputer.org/docs/current/developer-docs/setup/install) >= 0.15.0
+
+### Installation
+
+1. **Install DFX** (if not already installed):
+   ```bash
+   sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
+   ```
+
+2. **Install project dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Setup and deploy canisters**:
+   ```bash
+   cd src/dbank_frontend
+   npm run setup
+   ```
+
+### Development
+
+#### Start the local replica (required for local development):
 ```bash
-# Starts the replica, running in the background
 dfx start --background
+```
 
-# Deploys your canisters to the replica and generates your candid interface
+#### Deploy to local replica:
+```bash
 dfx deploy
 ```
 
-Once the job completes, your application will be available at `http://localhost:4943?canisterId={asset_canister_id}`.
-
-If you have made changes to your backend canister, you can generate a new candid interface with
-
+#### Start the frontend development server:
 ```bash
-npm run generate
-```
-
-at any time. This is recommended before starting the frontend development server, and will be run automatically any time you run `dfx deploy`.
-
-If you are making frontend changes, you can start a development server with
-
-```bash
+cd src/dbank_frontend
 npm start
 ```
 
-Which will start a server at `http://localhost:8080`, proxying API requests to the replica at port 4943.
+The frontend will be available at `http://localhost:3000`, with API requests proxied to the replica at port 4943.
 
-### Note on frontend environment variables
+### Building for Production
 
-If you are hosting frontend code somewhere without using DFX, you may need to make one of the following adjustments to ensure your project does not fetch the root key in production:
+```bash
+npm run build
+```
 
-- set`DFX_NETWORK` to `ic` if you are using Webpack
-- use your own preferred method to replace `process.env.DFX_NETWORK` in the autogenerated declarations
-  - Setting `canisters -> {asset_canister_id} -> declarations -> env_override to a string` in `dfx.json` will replace `process.env.DFX_NETWORK` with the string in the autogenerated declarations
-- Write your own `createActor` constructor
+### Running Tests
+
+```bash
+npm test
+```
+
+## 🔧 Configuration
+
+### DFX Configuration (`dfx.json`)
+
+The project uses the following canisters:
+
+| Canister | Type | Description |
+|----------|------|-------------|
+| `dbank_backend` | Motoko | Core banking logic |
+| `dbank_frontend` | Assets | React frontend application |
+| `internet_identity` | Custom | Authentication (pre-configured on mainnet) |
+
+### Frontend Configuration
+
+- **Port**: 3000 (development)
+- **Build Output**: `src/dbank_frontend/dist`
+- **Candid Interface**: Auto-generated in `src/declarations/`
+
+## 📚 Documentation
+
+- [Internet Computer Documentation](https://internetcomputer.org/docs/current/developer-docs/setup/deploy-locally)
+- [Motoko Programming Language Guide](https://internetcomputer.org/docs/current/motoko/main/motoko)
+- [DFINITY SDK Developer Tools](https://internetcomputer.org/docs/current/developer-docs/setup/install)
+- [React Documentation](https://react.dev/)
+- [Vite Documentation](https://vitejs.dev/)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the terms of the MIT license.
+
+## 🙏 Acknowledgments
+
+- [DFINITY Foundation](https://dfinity.org/) for the Internet Computer platform
+- The open-source community for their valuable contributions
+

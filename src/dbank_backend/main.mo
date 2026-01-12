@@ -1,39 +1,45 @@
 import Debug "mo:base/Debug";
+import Time "mo:base/Time";
+import Float "mo:base/Float";
+import Int "mo:base/Int";
+import Nat "mo:base/Nat";
+
 
 persistent actor Dbank {
-  stable var currentValue : Nat = 300;
-    currentValue := 100;
 
-    let id = 2345678910;
-    // Print the current value using debug_show
-   // Debug.print(debug_show(id));
+  var currentValue : Float = 300.0;
 
-//making the funcion to top up the value and its a public function
-//Allows users to add funds to their account
-    public func topUp(amount : Nat) {
-      currentValue += amount;
+  var startTime = Time.now();
+  Debug.print("Start time: " # debug_show(startTime));
+
+  public func topUp(amount : Float) {
+    currentValue += amount;
+    Debug.print(debug_show(currentValue));
+  };
+
+  public func withdraw(amount : Float) {
+    let tempValue : Float = currentValue - amount;
+    if (tempValue >= 0.0) {
+      currentValue -= amount;
       Debug.print(debug_show(currentValue));
-    };
-
-//Allows users to wothdraw funds from their account
-    public func withdraw(amount : Nat) {
-      let tempValue: Int = currentValue - amount;
-      if (tempValue >= 0) {
-        currentValue -= amount;
-        Debug.print(debug_show(currentValue));
-      } else {
-        Debug.print("Insufficient funds");
-      }
-    };
-
-    public query func checkBalance(): async Nat {
-      return currentValue;
-
+    } else {
+      Debug.print("Insufficient funds");
     }
+  };
 
-    //decrease the value by which the user wants to withdraw
-    
+  public query func checkBalance(): async Float {
+    return currentValue;
+  };
 
-    //topUp();
+  public func compoundDaily() {
+    let currentTime = Time.now();
+    let timeElapsedNS = currentTime - startTime;
+    let timeElapsedDays = timeElapsedNS / (86_400 * 1_000_000_000); // seconds in a day
+
+    let timeElapsedFloat = Float.fromInt(timeElapsedDays);
+    currentValue := currentValue * (1.01 ** timeElapsedFloat);
+
+    startTime := currentTime;
+    Debug.print("New value after daily compounding: " # debug_show(currentValue));
+  };
 };
-  
