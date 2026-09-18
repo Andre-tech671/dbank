@@ -27,7 +27,7 @@ window.addEventListener("load", async function(){
           await dbank_backend.withdraw(outputAmount);
         }
 
-        await dbank_backend.compoundInterest();
+        await dbank_backend.compoundDaily();
 
        updateBalance();
 
